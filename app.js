@@ -7,14 +7,13 @@ const usersRoutes = require('./routes/users.js');
 const cardsRoutes = require('./routes/cards.js');
 
 app.use(express.static(path.join(__dirname, 'public')));
-app.use('/', usersRoutes);
-app.use('/', cardsRoutes);
+app.use('/users', usersRoutes);
+app.use('/cards', cardsRoutes);
 app.use('*', (req, res) => {
   res.status(404).send({ message: 'Запрашиваемый ресурс не найден' });
 });
 
 app.listen(PORT, () => {
   // Если всё работает, консоль покажет, какой порт приложение слушает
-  // eslint-disable-next-line no-console
   console.log(`App listening on port ${PORT}`);
 });
