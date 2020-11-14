@@ -1,9 +1,15 @@
 const Card = require('../models/card');
 
+const errorMessage = {
+  notValid: 'Ошибка валидации',
+  noId: 'Нет карточки с таким id',
+  serverError: 'Ошибка сервера',
+};
+
 const getCards = (req, res) => {
   Card.find({})
     .then((cards) => res.status(200).send(cards))
-    .catch(() => res.status(500).send({ message: 'Ошибка на сервере' }));
+    .catch(() => res.status(500).send({ message: errorMessage.serverError }));
 };
 
 const createCard = (req, res) => {
@@ -13,9 +19,9 @@ const createCard = (req, res) => {
     .then((card) => res.status(200).send(card))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        return res.status(400).send({ message: 'Ошибка валидации' });
+        return res.status(400).send({ message: errorMessage.notValid });
       }
-      return res.status(500).send({ message: 'Ошибка сервера' });
+      return res.status(500).send({ message: errorMessage.serverError });
     });
 };
 
@@ -23,15 +29,15 @@ const deleteCard = (req, res) => {
   Card.findByIdAndRemove(req.params.cardId)
     .then((card) => {
       if (!card) {
-        return res.status(404).send({ message: 'Нет карточки с таким id' });
+        return res.status(404).send({ message: errorMessage.noId });
       }
       return res.status(200).send(card);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        res.status(400).send({ message: 'Переданы некорректные данные' });
+        res.status(400).send({ message: errorMessage.notValid });
       } else {
-        res.status(500).send({ message: 'Ошибка сервера' });
+        res.status(500).send({ message: errorMessage.serverError });
       }
     });
 };
@@ -44,15 +50,15 @@ const likeCard = (req, res) => {
   )
     .then((card) => {
       if (!card) {
-        return res.status(404).send({ message: 'Нет карточки с таким id' });
+        return res.status(404).send({ message: errorMessage.noId });
       }
       return res.send(card);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        res.status(400).send({ message: 'Невалидный id' });
+        res.status(400).send({ message: errorMessage.notValid });
       } else {
-        res.status(500).send({ message: 'Ошибка сервера' });
+        res.status(500).send({ message: errorMessage.serverError });
       }
     });
 };
@@ -65,15 +71,15 @@ const dislikeCard = (req, res) => {
   )
     .then((card) => {
       if (!card) {
-        return res.status(404).send({ message: 'Нет карточки с таким id' });
+        return res.status(404).send({ message: errorMessage.noId });
       }
       return res.send(card);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        res.status(400).send({ message: 'Невалидный id' });
+        res.status(400).send({ message: errorMessage.notValid });
       } else {
-        res.status(500).send({ message: 'Ошибка сервера' });
+        res.status(500).send({ message: errorMessage.serverError });
       }
     });
 };
